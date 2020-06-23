@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Downloader;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Books.v1;
-using Google.Apis.Discovery.v1.Data;
 using Google.Apis.Services;
-using Google.Apis.Storage.v1;
 using Google.Apis.Util.Store;
-using RestSharp;
 
 namespace Test_GBooksAPI
 {
@@ -75,27 +72,15 @@ namespace Test_GBooksAPI
             }
 
             var selection = int.Parse(Console.ReadLine());
-            var test = new RestDescription.AuthData.Oauth2Data();
-            
-            var token = credential.Token;
+            var selectedVolume = listMyBooks.Items[selection];
 
+            var token = await credential.GetAccessTokenForRequestAsync();
 
-            var client = new RestClient("http://books.google.sk/books/download/Light_Overlord_Vol_14_The_Witch_of_the_F?id=FS5wJwAAAEAJ&hl=&output=uploaded_content&source=gbs_api");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", "Bearer ya29.a0AfH6SMDTUUFrF3ToJZPmAXGefBNvTWmHo30eiqqCxlZ5N1r6RrIr4x46uMenwm4LPqomU4XV9hMVXZCWru19hHT48SKMZZKSFOgRryCaVURbl8N_Zn7N0UeamNE3qkU1mZepv23jLOp0JhrhTQj-jx5Fv2YWX8_T32E2");
-            IRestResponse response = client.Execute(request);
-            var stream = new FileStream("book.epub", FileMode.CreateNew);
+            var response = MyDownloader.MyDownload(selectedVolume, token);
+            var name = selectedVolume.VolumeInfo.Title.RemoveFilenameInvalidChars() + ".epub";
+            File.Delete(name);
+            var stream = new FileStream(name, FileMode.CreateNew);
             stream.Write(response.RawBytes);
-
-            //using (var client = new WebClient())
-            //{
-            //    client.Headers.Add("Authorization:" + token.AccessToken);
-            //    client.DownloadFileCompleted += (sender, args) => Console.WriteLine("Download complete");
-            //    var book = listMyBooks.Items[selection];
-            //    var accessInfo = book.AccessInfo;
-            //    client.DownloadFile(book.AccessInfo.Pdf.DownloadLink, "book.epub"); //There is a bug in API so pdf links are actually epubs
-            //}
         }
     }
 }

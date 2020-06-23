@@ -4,3 +4,7 @@ Test-GBooksAPI/bin/
 Test-GBooksAPI/obj/
 
 .vs/
+
+Downloader/bin/
+
+Downloader/obj/

@@ -11,7 +11,10 @@
     <PackageReference Include="Google.Apis.Books.v1" Version="1.46.0.1994" />
     <PackageReference Include="Google.Apis.Discovery.v1" Version="1.46.0" />
     <PackageReference Include="Google.Apis.Storage.v1" Version="1.46.0.1975" />
-    <PackageReference Include="RestSharp" Version="105.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Downloader\Downloader.csproj" />
   </ItemGroup>
 
 </Project>
